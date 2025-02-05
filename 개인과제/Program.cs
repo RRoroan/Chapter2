@@ -521,6 +521,7 @@ namespace 개인과제
                 {
                     while (true)
                     {
+                        int beforeHealth = player.Health;
                         Console.WriteLine("----------------------------------------------------");
                         Console.WriteLine("200 골드를 내시면 편안한 휴식을 취할 수 있습니다.");
                         Console.WriteLine("휴식 효과: 체력 20회복");
@@ -531,11 +532,10 @@ namespace 개인과제
                         {
                             if (player.Money >= 200)
                             {
-                                int beforeHealth = player.Health;
                                 player.Money -= 200;
                                 player.Health += 20;
-                                int recoverHealth = player.Health - beforeHealth;
                                 if (player.Health >= 100) player.Health = 100;
+                                int recoverHealth = player.Health - beforeHealth;
                                 Console.WriteLine("----------------------------------------------------");
                                 Console.WriteLine("휴식중....");
                                 Thread.Sleep(3000);
