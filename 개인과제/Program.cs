@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
 using static 개인과제.Program;
@@ -524,6 +525,7 @@ namespace 개인과제
                     shop = new Shop(player, inventory);
                     this.inventory = inventory;
 
+                    // Dictionary를 통해 입력한 숫자에 맞게 던전 입장
                     stageDictionary = new Dictionary<string, Stage>
                     {
                         { "1", new Stage(player, monster1, "쉬운 던전") },
@@ -611,6 +613,7 @@ namespace 개인과제
                     Console.WriteLine("3. 어려운 던전 (방어력 15이상 권장)");
                     string res = Console.ReadLine();
 
+                    // TryGetValue를 통해 원하는 숫자를 입력받으면 해당 스테이지로 던전 시작
                     if (stageDictionary.TryGetValue(res, out Stage stage))
                     {
                         stage.Start();
@@ -623,6 +626,7 @@ namespace 개인과제
                     }
                 }
 
+                //마을에서 상태보기, 인벤토리, 상점, 던전, 휴식 (원하는 곳으로 이동)
                 public void Village()
                 {
                     Console.WriteLine();
@@ -649,7 +653,6 @@ namespace 개인과제
                     {
                         Thread.Sleep(500);
                         Console.Clear();
-                        Console.Clear();
                         shop.Shopping();
                     }
                     else if (inputInfo == "4")
@@ -672,6 +675,8 @@ namespace 개인과제
                     }
                 }
             }
+
+            // 던전 스테이지 클래스
             public class Stage
             {
                 private ICharacter player;
@@ -679,13 +684,13 @@ namespace 개인과제
                 private int defenseRecommend;
                 private string stageName;
                 private Random random = new Random();
-
+                
                 public Stage(ICharacter player, IMonster monster, string stageName)
                 {
                     this.player = player;
                     this.monster = monster;
                     this.stageName = stageName;
-                    defenseRecommend = stageName switch
+                    defenseRecommend = stageName switch  // switch 표현식을 사용하여 defenseRecommend 값을 설정 후 player.Def 값이 defenseRecommend 값보다 작은 경우 if 문으로 이동
                     {
                         "쉬운 던전" => 5,
                         "일반 던전" => 11,
@@ -699,7 +704,7 @@ namespace 개인과제
                     Thread.Sleep(1000);
                     Console.WriteLine("....");
 
-                    if (player.Def < defenseRecommend && random.Next(100) < 40)
+                    if (player.Def < defenseRecommend && random.Next(100) < 40) //권장 방어력이 낮으면 40퍼센트 확률로 플레이어 사망 구현
                     {
                         Console.WriteLine("방어력이 낮아 플레이어가 던전 입구에서 사망하였습니다.");
                         Console.WriteLine("던전 클리어 실패!!");
@@ -743,13 +748,6 @@ namespace 개인과제
                     }
                 }
 
-                private void StageClear(ICharacter player, IMonster monster)
-                {
-                    if (monster is Monster)
-                    {
-                        Console.WriteLine("스테이지 클리어");
-                    }
-                }
             }
             static void Main(string[] args)
             {
@@ -757,6 +755,7 @@ namespace 개인과제
                 Console.Write("안녕하세요! 스파르타 RPG 게임을 시작합니다!\n플레이어의 이름을 설정하세요 : ");
                 string playerName = Console.ReadLine();
 
+                //ICharacter player = null 인 경우 계속 while문을 돌려 player가 만들어지면 while문에서 빠져나오게 구현
                 ICharacter player = null;
 
                 while (player == null)
@@ -788,8 +787,8 @@ namespace 개인과제
                         Console.WriteLine("잘못된 입력입니다. 다시 선택해주세요");
                     }
                 }
-                List<IInventory> playerInventory = new List<IInventory>();
-                MainLobby mainLobby = new MainLobby(player, playerInventory);
+                List<IInventory> inventory = new List<IInventory>();
+                MainLobby mainLobby = new MainLobby(player, inventory);
 
                 while (true)
                 {
