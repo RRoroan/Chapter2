@@ -396,8 +396,10 @@ namespace 개인과제
                         Console.WriteLine($"소지금: {player.Money}골드");
                         Console.WriteLine("구매할 아이템을 선택하세요.");
 
+                        //store안에 있는 아이템을 for문을 통해 보여주고
                         for (int i = 0; i < store.Count; i++)
                         {
+                            // 만약 구매한 아이템이 있다면 string purchase를 통해 이미 구매 라는 문구 표시
                             string purchase = inventory.Contains(store[i]) ? "이미 구매" : "";
                             Console.WriteLine($"{i + 1}. {store[i].Name} - {store[i].Price}골드 - {store[i].Info} - {store[i].Abstract} - {purchase}");
                         }
@@ -413,6 +415,7 @@ namespace 개인과제
                             Console.Clear();
                             break;
                         }
+                        // int.TryParse를 통해 input = 정수 / choice는 0보다 크고, store안에있는 아이템보다 작은 값을 입력해야한다
                         int choice;
                         if (int.TryParse(input, out choice) && choice > 0 && choice <= store.Count)
                         {
@@ -433,6 +436,7 @@ namespace 개인과제
                 }
             }
 
+            // 캐릭터의 인벤토리 클래스 (만들다보니 이 클래스가 필요한가 의문이 든다) 아마 다음에 만들게 되면 MyItem이라는 클래스 없이 만들 예정
             public class MyItem
             {
                 private ICharacter player;
@@ -445,6 +449,8 @@ namespace 개인과제
                     this.inventory = inventory;
                     equip = new List<IInventory>();
                 }
+
+                // 인벤토리 안에 있는 아이템 목록 보여주기
                 public void ShowMyItem()
                 {
                     while (true)
@@ -488,6 +494,7 @@ namespace 개인과제
 
                 }
 
+                // 장비를 착용하고 상태보기를 가면 내 상태에 공격력과 방어력이 업데이트 안되는 현상이 발견되어 function 하나 만들어서 업데이트 시키는 메소드
                 public void UpdateMyStatus()
                 {
                     int totalAtkBonus = inventory.Where(item => item.IsEquip && item is IWeapon).Sum(item => (item as IWeapon).AttackBonus);
@@ -497,8 +504,7 @@ namespace 개인과제
                 }
             }
 
-
-
+            // 
             public class MainLobby
             {
                 private ICharacter player;
