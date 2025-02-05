@@ -611,8 +611,6 @@ namespace 개인과제
                     }
                 }
             }
-
-
             public class Stage
             {
                 private ICharacter player;
@@ -690,14 +688,6 @@ namespace 개인과제
                     }
                 }
             }
-
-
-
-
-
-
-
-
             static void Main(string[] args)
             {
                 Console.Write("안녕하세요! 게임을 시작합니다!\n플레이어의 이름을 입력하세요 : ");
@@ -738,8 +728,6 @@ namespace 개인과제
                 while (true)
                 {
                     mainLobby.Info();
-
-
                 }
 
 
