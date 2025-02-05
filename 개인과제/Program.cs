@@ -7,6 +7,7 @@ namespace 개인과제
 {
     internal class Program
     {
+        //캐릭터 인터페이스 (전사, 레인저 클래스의 인터페이스)
         public interface ICharacter
         {
             int Level { get; }
@@ -21,6 +22,7 @@ namespace 개인과제
             void TakeDamage(int damage);
         }
 
+        // 몬스터 인터페이스 (고블린, 드래곤, 신의 인터페이스)
         public interface IMonster
         {
             string Name { get; }
@@ -30,6 +32,18 @@ namespace 개인과제
             void TakeDamage(int damage);
         }
 
+        // 아이템 인터페이스 (무기, 방어구의 인터페이스)
+        public interface IInventory
+        {
+            string Name { get; }
+            string Info { get; }
+
+            int Price { get; }
+            string Abstract { get; }
+            bool IsEquip { get; set; }
+            void Use(ICharacter character, List<IInventory> inventory);
+            void Buy(ICharacter character, int price, List<IInventory> inventory);
+        }
         public class Monster : IMonster
         {
             public string Name { get; }
@@ -72,7 +86,7 @@ namespace 개인과제
                 public God(string name) : base(name, 200, 20) { }
             }
 
-
+            // 전사 클래스
             public class Warrior : ICharacter
             {
                 public int Level { get; set; }
@@ -82,7 +96,7 @@ namespace 개인과제
                 public int Def { get; set; }
                 public int Health { get; set; }
                 public int Money { get; set; }
-                public bool IsDead => Health <= 0;
+                public bool IsDead => Health <= 0; //캐릭터가 죽었는지 확인하는 bool
                 public int Atk => new Random().Next(AtkMax - 5, AtkMax);
 
                 public Warrior(string name)
@@ -109,6 +123,7 @@ namespace 개인과제
                     }
                 }
             }
+            // 레인저 캐릭터 클래스
             public class Ranger : ICharacter
             {
                 public int Level { get; set; }
@@ -144,23 +159,15 @@ namespace 개인과제
                     }
                 }
             }
-            public interface IInventory
-            {
-                string Name { get; }
-                string Info { get; }
-
-                int Price { get; }
-                string Abstract { get; }
-                bool IsEquip { get; set; }
-                void Use(ICharacter character, List<IInventory> inventory);
-                void Buy(ICharacter character, int price, List<IInventory> inventory);
-            }
+            
 
             public interface IWeapon : IInventory
             {
+                // AttackBonus를 통해 나중에 무기를 구매하고 착용하면 캐릭터의 AtkMax에 AttackBonus를 sum 
                 int AttackBonus { get; }
             }
 
+            // DeffenceBonus를 통해 나중에 무기를 구매하고 착용하면 캐릭터의 Def에 DeffenceBonus를 sum 
             public interface IArmor : IInventory
             {
                 int DeffenceBonus { get; }
@@ -175,10 +182,10 @@ namespace 개인과제
                 public int AttackBonus => 5;
                 public string Abstract => "흔히 볼 수 있는 일반적인 검";
                 public bool IsEquip { get; set; } = false;
-
+                // Use 메소드를 통해 캐릭터가 상점에서 구매하는 function 구현
                 public void Use(ICharacter character, List<IInventory> inventory)
                 {
-                    if (IsEquip)
+                    if (IsEquip) //무기를 착용하는 bool값이 true 인경우 IsEquip = false로 만들고 공격력 내리고 해제 문구 
                     {
                         Console.WriteLine($"{Name}을(를) 해제합니다.");
                         character.AtkMax -= AttackBonus;
@@ -186,7 +193,7 @@ namespace 개인과제
                     }
                     else
                     {
-                        foreach (var item in inventory)
+                        foreach (var item in inventory) //foreach문을 통해 inventory안에 any item > 찾다 = IsEquip 그리고 item이 IWeapon인걸
                         {
                             if (inventory.Any(item => item.IsEquip && item is IWeapon))
                             {
@@ -203,10 +210,10 @@ namespace 개인과제
                 public void Buy(ICharacter character, int Price, List<IInventory> inventory)
                 {
 
-                    if (character.Money >= Price)
+                    if (character.Money >= Price) //캐릭터의 돈이 Price보다 많으면 구현 
                     {
                         character.Money -= Price;
-                        inventory.Add(this);
+                        inventory.Add(this); //캐릭터의 인벤토리에 추가
                         Console.WriteLine("----------------------------------------------------");
                         Console.WriteLine($"{Name}을 구매하였습니다.\n총 {Price}골드를 소비하였습니다.");
                     }
@@ -364,12 +371,16 @@ namespace 개인과제
                     }
                 }
             }
+
+            // 상점을 구현한 클래스
             public class Shop
             {
-                private ICharacter player;
-                private List<IInventory> inventory;
-                private List<IInventory> store;
+                private ICharacter player; //플레이어 객체를 만들어주고
+                private List<IInventory> inventory; //플레이어의 인벤토리 객체 생성
+                private List<IInventory> store; // 상점에 아이템을 넣어줄 List를 만들고
 
+
+                //이 부분에서 만들어준 객체를 초기화하고 store List안에 판매할 아이템을 넣어준다
                 public Shop(ICharacter player, List<IInventory> inventory)
                 {
                     this.player = player;
@@ -777,8 +788,6 @@ namespace 개인과제
                 {
                     mainLobby.Info();
                 }
-
-
             }
         }
     }
