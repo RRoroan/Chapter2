@@ -738,6 +738,8 @@ namespace 개인과제
                 while (true)
                 {
                     mainLobby.Info();
+
+
                 }
 
 
