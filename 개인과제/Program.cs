@@ -42,7 +42,7 @@ namespace 개인과제
                 Atk = atk;
 
             }
-            
+
             public bool IsDead => Health <= 0;
             public void TakeDamage(int damage)
             {
@@ -109,8 +109,6 @@ namespace 개인과제
                     }
                 }
             }
-
-
             public class Ranger : ICharacter
             {
                 public int Level { get; set; }
@@ -133,7 +131,6 @@ namespace 개인과제
                     Def = 5;
                     Money = 1500;
                 }
-
                 public void TakeDamage(int damage)
                 {
                     Health -= damage;
@@ -147,8 +144,6 @@ namespace 개인과제
                     }
                 }
             }
-
-
             public interface IInventory
             {
                 string Name { get; }
@@ -176,7 +171,6 @@ namespace 개인과제
             {
                 public string Name => "일반 소드";
                 public string Info => "공격력 + 5";
-
                 public int Price => 500;
                 public int AttackBonus => 5;
                 public string Abstract => "흔히 볼 수 있는 일반적인 검";
@@ -214,8 +208,12 @@ namespace 개인과제
                     {
                         character.Money -= Price;
                         inventory.Add(this);
-                        Console.WriteLine($"{Name}을 구매하였습니다. 총 {Price}골드를 소비하였습니다.");
-
+                        Console.WriteLine("----------------------------------------------------");
+                        Console.WriteLine($"{Name}을 구매하였습니다.\n총 {Price}골드를 소비하였습니다.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("골드가 부족합니다.");
                     }
                 }
             }
@@ -262,8 +260,12 @@ namespace 개인과제
                     {
                         character.Money -= Price;
                         inventory.Add(this);
-                        Console.WriteLine($"{Name}을 구매하였습니다. 총 {Price}골드를 소비하였습니다.");
-
+                        Console.WriteLine("----------------------------------------------------");
+                        Console.WriteLine($"{Name}을 구매하였습니다.\n총 {Price}골드를 소비하였습니다.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("골드가 부족합니다.");
                     }
                 }
             }
@@ -272,7 +274,6 @@ namespace 개인과제
             {
                 public string Name => "일반 갑옷";
                 public string Info => "방어력 + 5";
-
                 public int Price => 500;
                 public int DeffenceBonus => 5;
                 public string Abstract => "흔히 볼 수 있는 일반적인 갑옷";
@@ -307,7 +308,8 @@ namespace 개인과제
                     {
                         character.Money -= Price;
                         inventory.Add(this);
-                        Console.WriteLine($"{Name}을 구매하였습니다. 총 {Price}골드를 소비하였습니다.");
+                        Console.WriteLine("----------------------------------------------------");
+                        Console.WriteLine($"{Name}을 구매하였습니다.\n총 {Price}골드를 소비하였습니다.");
                     }
                     else
                     {
@@ -320,7 +322,6 @@ namespace 개인과제
             {
                 public string Name => "골드 갑옷";
                 public string Info => "방어력 + 10";
-
                 public int Price => 1000;
                 public int DeffenceBonus => 10;
                 public string Abstract => "금으로 만든 값이 비싼 갑옷";
@@ -355,7 +356,8 @@ namespace 개인과제
                     {
                         character.Money -= Price;
                         inventory.Add(this);
-                        Console.WriteLine($"{Name}을 구매하였습니다. 총 {Price}골드를 소비하였습니다.");
+                        Console.WriteLine("----------------------------------------------------");
+                        Console.WriteLine($"{Name}을 구매하였습니다.\n총 {Price}골드를 소비하였습니다.");
                     }
                     else
                     {
@@ -363,40 +365,31 @@ namespace 개인과제
                     }
                 }
             }
-
-
-
-
             public class Shop
             {
                 private ICharacter player;
                 private List<IInventory> inventory;
                 private List<IInventory> store;
-                private List<IInventory> purchased;
 
                 public Shop(ICharacter player, List<IInventory> inventory)
                 {
                     this.player = player;
                     this.inventory = inventory;
                     store = new List<IInventory>() { new NormalArmor(), new GoldArmor(), new NormalSword(), new GoldSword() };
-                    purchased = new List<IInventory>();
                 }
-
 
                 public void Shopping()
                 {
                     while (true)
                     {
-
                         Console.WriteLine("----------------------------------------------------");
                         Console.WriteLine($"소지금: {player.Money}골드");
                         Console.WriteLine("구매할 아이템을 선택하세요.");
 
                         for (int i = 0; i < store.Count; i++)
                         {
-                            string purchase = purchased.Contains(store[i]) ? "이미 구매" : "";
+                            string purchase = inventory.Contains(store[i]) ? "이미 구매" : "";
                             Console.WriteLine($"{i + 1}. {store[i].Name} - {store[i].Price}골드 - {store[i].Info} - {store[i].Abstract} - {purchase}");
-
                         }
                         Console.WriteLine("0. 나가기");
                         Console.Write("구매할 아이템의 번호를 입력하세요: ");
@@ -410,16 +403,11 @@ namespace 개인과제
                             Console.Clear();
                             break;
                         }
-
-
-
                         int choice;
                         if (int.TryParse(input, out choice) && choice > 0 && choice <= store.Count)
                         {
                             IInventory selectedItem = store[choice - 1];
-
                             bool hasItem = inventory.Any(item => item.Name == selectedItem.Name);
-
                             if (hasItem)
                             {
                                 Console.WriteLine("이미 인벤토리에 아이템이 있습니다.");
@@ -427,8 +415,6 @@ namespace 개인과제
                             else
                             {
                                 selectedItem.Buy(player, selectedItem.Price, inventory);
-                                purchased.Add(selectedItem);
-
                                 Console.WriteLine("구매한 아이템이 인벤토리에 추가되었습니다.");
                             }
 
@@ -436,7 +422,6 @@ namespace 개인과제
                     }
                 }
             }
-
 
             public class MyItem
             {
@@ -454,11 +439,9 @@ namespace 개인과제
                 {
                     while (true)
                     {
-
                         if (inventory.Count <= 0)
                         {
                             Console.WriteLine("인벤토리에 아이템이 없습니다.");
-                            return;
                         }
                         int choose;
                         Console.WriteLine("인벤토리에 있는 아이템 목록 : ");
@@ -532,7 +515,7 @@ namespace 개인과제
                         { "3", new Stage(player, monster3, "Stage 3")}
                     };
 
-                    
+
                 }
 
                 public void ShowInfo()
@@ -541,19 +524,24 @@ namespace 개인과제
                     {
                         Console.Clear();
                         Console.WriteLine("----------------------------------------------------");
-                        Console.WriteLine($"플레이어 정보:\nLevel: {player.Level}\n이름: {player.Name}\n직업: {player.Chad}");
+                        Console.WriteLine($"플레이어 정보:\nLevel: {player.Level}\n이름: {player.Name}\n직업: {player.Chad}\n체력: {player.Health}");
                         myItem.UpdateMyStatus();
 
                         Console.WriteLine("0. 나가기");
                         string input = Console.ReadLine();
 
-                        if (input == "0") return;
+                        if (input == "0")
+                        {
+                            Thread.Sleep(500);
+                            Console.Clear();
+                            return;
+                        }
 
                     }
 
                 }
 
-                public void StageSelect ()
+                public void StageSelect()
                 {
                     Console.Clear();
                     Console.WriteLine("던전에 입장하였습니다.");
@@ -565,7 +553,7 @@ namespace 개인과제
 
                     if (stageDictionary.TryGetValue(res, out Stage stage))
                     {
-                        if(res == "1" && player.Def < 5)
+                        if (res == "1" && player.Def < 5)
                         {
                             monster.Atk += 10;
                             stage.Start();
@@ -580,34 +568,43 @@ namespace 개인과제
                 public void Info()
                 {
                     Console.WriteLine();
-                    Console.WriteLine($"{player.Name}님 안녕하세요. 미미 마을에 오신 것을 환영합니다.\n당신의 직업은 {player.Chad}입니다.");
+                    Console.WriteLine("----------------------------------------------------");
+                    Console.WriteLine($"{player.Name}님 안녕하세요. 스파르타 마을에 오신 것을 환영합니다.\n당신의 직업은 {player.Chad}입니다.");
                     Console.WriteLine("마을에서는 던전에 들어가기 전에 여러 활동을 할 수 있습니다.");
                     Console.WriteLine();
                     Console.Write("\n1. 상태창 보기\n2. 인벤토리 보기\n3. 상점\n4. 던전 입장\n번호를 입력해주세요 : ");
                     string inputInfo = Console.ReadLine();
 
-
-
                     if (inputInfo == "1")
                     {
-
+                        Thread.Sleep(500);
+                        Console.Clear();
                         ShowInfo();
-
-
                     }
                     else if (inputInfo == "2")
                     {
+                        Thread.Sleep(500);
+                        Console.Clear();
                         myItem.ShowMyItem();
-
                     }
                     else if (inputInfo == "3")
                     {
+                        Thread.Sleep(500);
+                        Console.Clear();
                         Console.Clear();
                         shop.Shopping();
                     }
                     else if (inputInfo == "4")
                     {
+                        Thread.Sleep(500);
+                        Console.Clear();
                         StageSelect();
+                    }
+                    else
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("----------------------------------------------------");
+                        Console.WriteLine("잘못된 입력입니다");
                     }
                 }
             }
@@ -615,16 +612,16 @@ namespace 개인과제
             {
                 private ICharacter player;
                 private IMonster monster;
-                private int defenseThreshold;
+                private int defenseRecommend;
                 private string stageName;
                 private Random random = new Random();
-                
+
                 public Stage(ICharacter player, IMonster monster, string stageName)
                 {
                     this.player = player;
                     this.monster = monster;
                     this.stageName = stageName;
-                    defenseThreshold = stageName switch
+                    defenseRecommend = stageName switch
                     {
                         "Stage 1" => 5,
                         "Stage 2" => 11,
@@ -638,9 +635,9 @@ namespace 개인과제
                     Thread.Sleep(1000);
                     Console.WriteLine("....");
 
-                    if (player.Def < defenseThreshold && random.Next(100) < 80)
+                    if (player.Def < defenseRecommend && random.Next(100) < 40)
                     {
-                        Console.WriteLine("방어력이 낮아 플레이어가 던전에서 사망하였습니다.");
+                        Console.WriteLine("방어력이 낮아 플레이어가 던전 입구에서 사망하였습니다.");
                         Console.WriteLine("던전 클리어 실패!!");
                         return;
                     }
@@ -663,7 +660,7 @@ namespace 개인과제
                             return;
                         }
 
-                        Console.WriteLine() ;
+                        Console.WriteLine();
                         Console.WriteLine($"{monster.Name}의 반격!");
                         player.TakeDamage(monster.Atk);
                         Thread.Sleep(1000);
@@ -690,7 +687,8 @@ namespace 개인과제
             }
             static void Main(string[] args)
             {
-                Console.Write("안녕하세요! 게임을 시작합니다!\n플레이어의 이름을 입력하세요 : ");
+                Console.WriteLine("----------------------------------------------------");
+                Console.Write("안녕하세요! 스파르타 RPG 게임을 시작합니다!\n플레이어의 이름을 설정하세요 : ");
                 string playerName = Console.ReadLine();
 
                 ICharacter player = null;
@@ -698,8 +696,8 @@ namespace 개인과제
                 while (player == null)
                 {
                     Console.WriteLine("직업을 선택하세요");
-                    Console.WriteLine("1. 전사 (Warrior)");
-                    Console.WriteLine("2. 레인저 (Ranger)");
+                    Console.WriteLine("1. 전사 (Warrior) (공격력: 10  방어력: 10)");
+                    Console.WriteLine("2. 레인저 (Ranger)(공격력: 15  방어력:  5)");
                     Console.WriteLine("번호를 입력해주세요");
                     string input = Console.ReadLine();
 
@@ -719,6 +717,8 @@ namespace 개인과제
 
                     else
                     {
+                        Console.WriteLine();
+                        Console.WriteLine("----------------------------------------------------");
                         Console.WriteLine("잘못된 입력입니다. 다시 선택해주세요");
                     }
                 }
@@ -735,5 +735,5 @@ namespace 개인과제
         }
     }
 }
-    
+
 
