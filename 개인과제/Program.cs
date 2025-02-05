@@ -504,7 +504,7 @@ namespace 개인과제
                 }
             }
 
-            // 
+            // 메인로비 클래스로 마을에서 하는 행동을 모아놨다.
             public class MainLobby
             {
                 private ICharacter player;
@@ -534,6 +534,7 @@ namespace 개인과제
 
                 }
 
+                // 휴식기능
                 public void Resting()
                 {
                     while (true)
@@ -577,6 +578,7 @@ namespace 개인과제
                     }
                 }
 
+                // 플레이어 상태보기
                 public void ShowInfo()
                 {
                     while (true)
@@ -598,6 +600,7 @@ namespace 개인과제
                     }
                 }
 
+                // 던전 입장 
                 public void StageSelect()
                 {
                     Console.Clear();
@@ -610,19 +613,17 @@ namespace 개인과제
 
                     if (stageDictionary.TryGetValue(res, out Stage stage))
                     {
-                        if (res == "1" && player.Def < 5)
-                        {
-                            monster.Atk += 10;
-                            stage.Start();
-                        }
-                        else
-                        {
-                            stage.Start();
-                        }
+                        stage.Start();
+                    }
+                    else
+                    {
+                        Console.WriteLine("잘못된 입력입니다. 마을로 돌아갑니다.");
+                        Thread.Sleep(1500);
+                        Console.Clear();
                     }
                 }
 
-                public void Info()
+                public void Village()
                 {
                     Console.WriteLine();
                     Console.WriteLine("----------------------------------------------------");
@@ -792,7 +793,7 @@ namespace 개인과제
 
                 while (true)
                 {
-                    mainLobby.Info();
+                    mainLobby.Village();
                 }
             }
         }
