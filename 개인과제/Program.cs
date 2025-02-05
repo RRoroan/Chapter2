@@ -198,7 +198,6 @@ namespace 개인과제
                         character.AtkMax += AttackBonus;
                         IsEquip = true;
                     }
-
                 }
 
                 public void Buy(ICharacter character, int Price, List<IInventory> inventory)
@@ -525,20 +524,22 @@ namespace 개인과제
                         Console.WriteLine("----------------------------------------------------");
                         Console.WriteLine("200 골드를 내시면 편안한 휴식을 취할 수 있습니다.");
                         Console.WriteLine("휴식 효과: 체력 20회복");
-                        Console.WriteLine($"소지 골드: {player.Money}");
+                        Console.WriteLine($"소지 골드: {player.Money}\n현재 체력: {player.Health}");
                         Console.WriteLine("1. 휴식하기\n0. 나가기\n번호를 입력해주세요: ");
                         string input = Console.ReadLine();
                         if (input == "1")
                         {
                             if (player.Money >= 200)
                             {
+                                int beforeHealth = player.Health;
                                 player.Money -= 200;
                                 player.Health += 20;
+                                int recoverHealth = player.Health - beforeHealth;
                                 if (player.Health >= 100) player.Health = 100;
                                 Console.WriteLine("----------------------------------------------------");
                                 Console.WriteLine("휴식중....");
                                 Thread.Sleep(3000);
-                                Console.WriteLine("200 골드를 사용하여 체력을 20회복 했습니다.");
+                                Console.WriteLine($"200 골드를 사용하여 체력 {recoverHealth} 회복했습니다.");
                                 Console.WriteLine($"남은 골드: {player.Money} 골드");
                             }
                             else
