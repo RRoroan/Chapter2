@@ -510,12 +510,53 @@ namespace 개인과제
 
                     stageDictionary = new Dictionary<string, Stage>
                     {
-                        { "1", new Stage(player, monster1, "Stage 1") },
-                        { "2", new Stage(player, monster2,"Stage 2") },
-                        { "3", new Stage(player, monster3, "Stage 3")}
+                        { "1", new Stage(player, monster1, "쉬운 던전") },
+                        { "2", new Stage(player, monster2,"일반 던전") },
+                        { "3", new Stage(player, monster3, "어려운 던전")}
                     };
 
 
+                }
+
+                public void Resting()
+                {
+                    while (true)
+                    {
+                        Console.WriteLine("----------------------------------------------------");
+                        Console.WriteLine("200 골드를 내시면 편안한 휴식을 취할 수 있습니다.");
+                        Console.WriteLine("휴식 효과: 체력 20회복");
+                        Console.WriteLine($"소지 골드: {player.Money}");
+                        Console.WriteLine("1. 휴식하기\n0. 나가기\n번호를 입력해주세요: ");
+                        string input = Console.ReadLine();
+                        if (input == "1")
+                        {
+                            if (player.Money >= 200)
+                            {
+                                player.Money -= 200;
+                                player.Health += 20;
+                                if (player.Health >= 100) player.Health = 100;
+                                Console.WriteLine("----------------------------------------------------");
+                                Console.WriteLine("휴식중....");
+                                Thread.Sleep(3000);
+                                Console.WriteLine("200 골드를 사용하여 체력을 20회복 했습니다.");
+                                Console.WriteLine($"남은 골드: {player.Money} 골드");
+                            }
+                            else
+                            {
+                                Console.WriteLine("골드가 부족합니다.");
+                            }
+                        }
+                        else if (input == "0")
+                        {
+                            Thread.Sleep(500);
+                            Console.Clear();
+                            return;
+                        }
+                        else
+                        {
+                            Console.WriteLine("잘못된 입력입니다.");
+                        }
+                    }
                 }
 
                 public void ShowInfo()
@@ -536,9 +577,7 @@ namespace 개인과제
                             Console.Clear();
                             return;
                         }
-
                     }
-
                 }
 
                 public void StageSelect()
@@ -572,7 +611,7 @@ namespace 개인과제
                     Console.WriteLine($"{player.Name}님 안녕하세요. 스파르타 마을에 오신 것을 환영합니다.\n당신의 직업은 {player.Chad}입니다.");
                     Console.WriteLine("마을에서는 던전에 들어가기 전에 여러 활동을 할 수 있습니다.");
                     Console.WriteLine();
-                    Console.Write("\n1. 상태창 보기\n2. 인벤토리 보기\n3. 상점\n4. 던전 입장\n번호를 입력해주세요 : ");
+                    Console.Write("\n1. 상태창 보기\n2. 인벤토리 보기\n3. 상점\n4. 던전 입장\n5. 휴식하기(체력회복)\n번호를 입력해주세요 : ");
                     string inputInfo = Console.ReadLine();
 
                     if (inputInfo == "1")
@@ -600,6 +639,12 @@ namespace 개인과제
                         Console.Clear();
                         StageSelect();
                     }
+                    else if (inputInfo == "5")
+                    {
+                        Thread.Sleep(500);
+                        Console.Clear();
+                        Resting();
+                    }
                     else
                     {
                         Console.WriteLine();
@@ -623,9 +668,9 @@ namespace 개인과제
                     this.stageName = stageName;
                     defenseRecommend = stageName switch
                     {
-                        "Stage 1" => 5,
-                        "Stage 2" => 11,
-                        "Stage 3" => 17
+                        "쉬운 던전" => 5,
+                        "일반 던전" => 11,
+                        "어려운 던전" => 17
                     };
                 }
                 public void Start()
@@ -657,6 +702,10 @@ namespace 개인과제
                         if (monster.IsDead)
                         {
                             Console.WriteLine($"{monster.Name} 처치 완료! 던전 클리어!");
+                            Console.WriteLine($"남은 체력: {player.Health}");
+                            Console.WriteLine("자동으로 마을로 복귀합니다.");
+                            Thread.Sleep(3000);
+                            Console.Clear();
                             return;
                         }
 
@@ -669,11 +718,9 @@ namespace 개인과제
                     if (player.IsDead)
                     {
                         Console.WriteLine("플레이어 사망.... 던전 실패!!!");
-                    }
-
-                    else
-                    {
-                        Console.WriteLine("던전 클리어 !! 축하드립니다!! ");
+                        Console.WriteLine("자동으로 마을로 복귀합니다.");
+                        Thread.Sleep(3000);
+                        Console.Clear();
                     }
                 }
 
